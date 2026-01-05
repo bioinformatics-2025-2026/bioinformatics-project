@@ -1,4 +1,4 @@
-from grakel import RandomWalkLabeled, graph_from_csv
+from grakel import ShortestPath, graph_from_csv
 
 def main():
     g1 = graph_from_csv(
@@ -12,16 +12,14 @@ def main():
     )
 
 
-    random_walk = RandomWalkLabeled(
-        lamda=1,
-        method_type='fast',
-        kernel_type='geometric',
-        p=1,
+    sp = ShortestPath(
+            normalize=True,
+            with_labels=True
     )
     
-    random_walk.fit_transform(g1)
-    random_walk.transform(g2)
-
+    M = sp.fit_transform(g1)
+    K = sp.transform(g2)
+    print(M)
 
 
 if __name__ == "__main__":
