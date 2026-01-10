@@ -18,10 +18,12 @@ def build_mapping(taxonomy_file_path: str) -> dict[str, str]:
     return mapping
 
 
-def load_graphs(edge_file: str, node_file: str) -> Graph:
+def load_graphs(edge_file: str, node_file: str) -> Graph | None:
     edges = pd.read_csv(edge_file)
     nodes = pd.read_csv(node_file)
 
+    if edges.empty or nodes.empty:
+        return None
     # 1. Build Adjacency: {src: {dst: weight}}
     # Force IDs to string to match node labels keys
     adj = {str(n): {} for n in nodes["id"]}
@@ -49,7 +51,17 @@ def main():
         level_edges = sorted(glob.glob(os.path.join(level, "edges*.csv")))
         level_nodes = sorted(glob.glob(os.path.join(level, "nodes*")))
         print(f"[*] Loading graphs of {level}")
-        graphs = [load_graphs(e, n) for e, n in zip(level_edges, level_nodes)]
+        # FIX: skipping empty graphs to avoid Grakel crashing
+        # Those graphs are likely graphs with nodes and 0 edges,
+        # or 0 shortest paths
+        graphs = []
+        for e, n in zip(level_edges, level_nodes):
+            tmp = load_graphs(e, n)
+            if isinstance(tmp, Graph):
+                graphs.append(tmp)
+            else:
+                print(f"[!] Skipped {e}, {n} because either one of them was empty.")
+
         # Initialize Kernel
         sp = ShortestPath(normalize=True, with_labels=True, algorithm_type="auto")
         print("Fitting...")
@@ -58,7 +70,7 @@ def main():
         # diagonals of course do not count...
         print(f"Success.")
         print(M)
-        out_file = f"{lvl_of_comp_path}_results.txt"
+        out_file = f"/out/{lvl_of_comp_path}_results.txt"
         with open(out_file, "w+") as output:
             pass
 
