@@ -6,6 +6,7 @@ readme = "README.md"
 requires-python = ">=3.10"
 dependencies = [
     "grakel",
+    "pandas>=2.3.3",
 ]
 
 [tool.uv.sources]
