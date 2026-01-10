@@ -7,8 +7,8 @@ from grakel.kernels import ShortestPath
 
 
 def build_mapping(taxonomy_file_path: str) -> dict[str, str]:
-    # reads the taxonomy file and skips the first row (malformed?)
-    df = pd.read_csv(taxonomy_file_path, skiprows=0)
+    # reads the taxonomy file and skips the first row
+    df = pd.read_csv(taxonomy_file_path, header=1)
     df.columns = df.columns.str.strip()
     # TODO: save name and taxonomy_2 (kingdom level) as a list[str] with the same
     # code key
