@@ -46,8 +46,8 @@ def main():
     for level in levels_of_completeness:
         print(f"[*] Level: {level}")
         lvl_of_comp_path = level.strip().split("/")[-2]
-        level_edges = sorted(glob.glob(pattern + "edges*"))
-        level_nodes = sorted(glob.glob(pattern + "nodes*"))
+        level_edges = sorted(glob.glob(os.path.join(level, "edges*.csv")))
+        level_nodes = sorted(glob.glob(os.path.join(level, "nodes*")))
         print(f"[*] Loading graphs of {level}")
         graphs = [load_graphs(e, n) for e, n in zip(level_edges, level_nodes)]
         # Initialize Kernel
