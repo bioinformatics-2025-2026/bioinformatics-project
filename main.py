@@ -68,11 +68,9 @@ def main():
         M = sp.fit_transform(graphs)
         # K_ij represent the similarity between species i and species j
         # diagonals of course do not count...
-        print(f"Success.")
-        print(M)
         out_file = f"/out/{lvl_of_comp_path}_results.txt"
         with open(out_file, "w+") as output:
-            pass
+            _ = output.write(str(M))
 
 
 if __name__ == "__main__":
